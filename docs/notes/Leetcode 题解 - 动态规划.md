@@ -110,7 +110,7 @@ public int rob(int[] nums) {
 [213. House Robber II (Medium)](https://leetcode.com/problems/house-robber-ii/description/)
 
 ```java
-public  int rob(int[] nums) {
+public int rob(int[] nums) {
     if (nums == null || nums.length == 0) {
         return 0;
     }
@@ -176,6 +176,62 @@ Given the above grid map, return 7. Because the path 1→3→1→1→1 minimizes
 
 ```java
 public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        if(m==0 && n==0){
+            return 0;
+        }
+        
+        int[][] dp = new int[m][n];
+        dp[0][0] = grid[0][0];
+        for(int i=1;i<m;i++){
+            dp[i][0] = dp[i-1][0]+grid[i][0];
+        }
+        for(int i=1;i<n;i++){
+            dp[0][i] = dp[0][i-1]+grid[0][i];
+        }
+        for(int i=1; i<m;i++){
+            for(int j=1; j<n;j++){
+                dp[i][j] = Math.min(dp[i-1][j],dp[i][j-1]) + grid[i][j];
+            }
+        }
+        return dp[m-1][n-1];
+}
+```
+
+```java
+public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        if(m==0&&n==0){
+            return 0;
+        }
+        
+        int[] dp = new int[n];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(i==0){
+                    if(j==0){   
+                        dp[j] = grid[i][j];
+                    } else {
+                        dp[j] = dp[j-1] + grid[i][j];
+                    }
+                }else{
+                    if(j==0){
+                        dp[j] = dp[j] + grid[i][j];
+                    }else{
+                        dp[j] = Math.min(dp[j],dp[j-1]) + grid[i][j];   
+                    }
+                }
+            }
+        }
+        
+        return dp[n-1];
+}
+```
+
+```java
+public int minPathSum(int[][] grid) {
     if (grid.length == 0 || grid[0].length == 0) {
         return 0;
     }
@@ -204,6 +260,27 @@ public int minPathSum(int[][] grid) {
 题目描述：统计从矩阵左上角到右下角的路径总数，每次只能向右或者向下移动。
 
 <div align="center"> <img src="https://gitee.com/CyC2018/CS-Notes/raw/master/docs/pics/dc82f0f3-c1d4-4ac8-90ac-d5b32a9bd75a.jpg"/> </div><br>
+
+```java
+public int uniquePaths(int m, int n) {
+    if(m==0 && n==0){
+        return 0;
+    }
+    
+    int[][] dp = new int[m][n];
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            if(i==0 || j==0){
+               dp[i][j] = 1; 
+            }else{
+               dp[i][j] = dp[i-1][j] + dp[i][j-1];   
+            }
+        }
+    }
+    
+    return dp[m-1][n-1];
+}
+```
 
 ```java
 public int uniquePaths(int m, int n) {
@@ -279,6 +356,23 @@ dp[i] 表示以 A[i] 为结尾的等差递增子区间的个数。
 
 在 A[i] - A[i - 1] == A[i - 1] - A[i - 2] 的条件下，{A[i - 2], A[i - 1], A[i]} 是一个等差递增子区间。如果 {A[i - 3], A[i - 2], A[i - 1]} 是一个等差递增子区间，那么 {A[i - 3], A[i - 2], A[i - 1], A[i]} 也是等差递增子区间，dp[i] = dp[i-1] + 1。
 
+```
+public int numberOfArithmeticSlices(int[] A) {
+        
+        int count = 0;
+        for(int i=1;i<A.length;i++){
+            int d = A[i]- A[i-1];
+            for(int j=i;j<A.length-1;j++){
+                if((A[j+1]-A[j])==d){
+                    count++;
+                }else{
+                    break;
+                }  
+            }
+        }
+        return count;
+}
+```
 ```java
 public int numberOfArithmeticSlices(int[] A) {
     if (A == null || A.length == 0) {
@@ -307,6 +401,19 @@ public int numberOfArithmeticSlices(int[] A) {
 
 题目描述：For example, given n = 2, return 1 (2 = 1 + 1); given n = 10, return 36 (10 = 3 + 3 + 4).
 
+```
+public int integerBreak(int n) {
+        
+        int[] dp = new int[n+1];
+        dp[1] = 1;
+        for(int i=2;i<=n;i++){
+            for(int j=1;j<i;j++){
+                dp[i] = Math.max(dp[i],(Math.max(j,dp[j])*Math.max(i-j,dp[i-j])));
+            }
+        }
+        return dp[n];
+}
+```
 ```java
 public int integerBreak(int n) {
     int[] dp = new int[n + 1];
@@ -325,7 +432,41 @@ public int integerBreak(int n) {
 [279. Perfect Squares(Medium)](https://leetcode.com/problems/perfect-squares/description/)
 
 题目描述：For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
-
+```
+public int numSquares(int n) {
+        
+    if(n ==1){
+        return 1;
+    }
+    
+    int[] dp = new int[n+1];
+    Arrays.fill(dp,Integer.MAX_VALUE);
+    dp[0] = 0;
+    for(int i=0;i<=n;i++){
+        for(int j=1;(i+j*j) <=n;j++){
+            dp[i+j*j] = Math.min(dp[i+j*j],dp[i]+1);
+        }
+    }
+    return dp[n];
+}
+```
+```
+public int numSquares(int n) {
+    int[] dp = new int[n + 1];
+    Arrays.fill(dp, Integer.MAX_VALUE);
+    dp[0] = 0;
+    for(int i = 1; i <= n; ++i) {
+        int min = Integer.MAX_VALUE;
+        int j = 1;
+        while(i - j*j >= 0) {
+            min = Math.min(min, dp[i - j*j] + 1);
+            ++j;
+        }
+        dp[i] = min;
+    }		
+return dp[n];
+}
+```
 ```java
 public int numSquares(int n) {
     List<Integer> squareList = generateSquareList(n);
