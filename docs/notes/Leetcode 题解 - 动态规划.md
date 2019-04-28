@@ -175,7 +175,8 @@ Given the above grid map, return 7. Because the path 1→3→1→1→1 minimizes
 题目描述：求从矩阵的左上角到右下角的最小路径和，每次只能向右和向下移动。
 
 ```java
-public int minPathSum(int[][] grid) {
+class minPathSum {
+    public int minPathSum(int[][] grid) {
         int m = grid.length;
         int n = grid[0].length;
         if(m==0 && n==0){
@@ -196,11 +197,49 @@ public int minPathSum(int[][] grid) {
             }
         }
         return dp[m-1][n-1];
+    }
+}
+```
+```java
+class minPathSum {
+    public int minPathSum(int[][] grid) {
+        if(grid == null || grid.length == 0){
+            return 0;
+        }
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n];
+        
+        for(int i=0;i < m;i++){
+            for(int j =0;j<n;j++){
+                if(i == 0){
+                    if(j == 0){
+                        dp[i][j] = grid[i][j]; 
+                    }else{
+                        dp[i][j] = dp[i][j-1] + grid[i][j];
+                    }
+                }else{
+                    if(j == 0){
+                        dp[i][j] = dp[i-1][j] + grid[i][j];
+                    }else{
+                        if(dp[i][j-1] > dp[i-1][j]){
+                            dp[i][j] = dp[i-1][j] + grid[i][j];
+                        }else{
+                            dp[i][j] = dp[i][j-1] + grid[i][j];
+                        }
+                    }
+                }
+            }
+        }
+        return dp[m-1][n-1];
+    }
 }
 ```
 
+
 ```java
-public int minPathSum(int[][] grid) {
+class minPathSum {
+    public int minPathSum(int[][] grid) {
         int m = grid.length;
         int n = grid[0].length;
         if(m==0&&n==0){
@@ -227,29 +266,32 @@ public int minPathSum(int[][] grid) {
         }
         
         return dp[n-1];
+    }
 }
 ```
 
 ```java
-public int minPathSum(int[][] grid) {
-    if (grid.length == 0 || grid[0].length == 0) {
-        return 0;
-    }
-    int m = grid.length, n = grid[0].length;
-    int[] dp = new int[n];
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            if (j == 0) {
-                dp[j] = dp[j];        // 只能从上侧走到该位置
-            } else if (i == 0) {
-                dp[j] = dp[j - 1];    // 只能从左侧走到该位置
-            } else {
-                dp[j] = Math.min(dp[j - 1], dp[j]);
-            }
-            dp[j] += grid[i][j];
+class minPathSum {
+    public int minPathSum(int[][] grid) {
+        if (grid.length == 0 || grid[0].length == 0) {
+            return 0;
         }
+        int m = grid.length, n = grid[0].length;
+        int[] dp = new int[n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (j == 0) {
+                    dp[j] = dp[j];        // 只能从上侧走到该位置
+                } else if (i == 0) {
+                    dp[j] = dp[j - 1];    // 只能从左侧走到该位置
+                } else {
+                    dp[j] = Math.min(dp[j - 1], dp[j]);
+                }
+                dp[j] += grid[i][j];
+            }
+        }
+        return dp[n - 1];
     }
-    return dp[n - 1];
 }
 ```
 
@@ -356,7 +398,7 @@ dp[i] 表示以 A[i] 为结尾的等差递增子区间的个数。
 
 在 A[i] - A[i - 1] == A[i - 1] - A[i - 2] 的条件下，{A[i - 2], A[i - 1], A[i]} 是一个等差递增子区间。如果 {A[i - 3], A[i - 2], A[i - 1]} 是一个等差递增子区间，那么 {A[i - 3], A[i - 2], A[i - 1], A[i]} 也是等差递增子区间，dp[i] = dp[i-1] + 1。
 
-```
+```java
 public int numberOfArithmeticSlices(int[] A) {
         
         int count = 0;
@@ -401,7 +443,7 @@ public int numberOfArithmeticSlices(int[] A) {
 
 题目描述：For example, given n = 2, return 1 (2 = 1 + 1); given n = 10, return 36 (10 = 3 + 3 + 4).
 
-```
+```java
 public int integerBreak(int n) {
         
         int[] dp = new int[n+1];
@@ -432,69 +474,75 @@ public int integerBreak(int n) {
 [279. Perfect Squares(Medium)](https://leetcode.com/problems/perfect-squares/description/)
 
 题目描述：For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
-```
-public int numSquares(int n) {
+```java
+class numSquares {
+    public int numSquares(int n) {
+            
+        if(n ==1){
+            return 1;
+        }
         
-    if(n ==1){
-        return 1;
-    }
-    
-    int[] dp = new int[n+1];
-    Arrays.fill(dp,Integer.MAX_VALUE);
-    dp[0] = 0;
-    for(int i=0;i<=n;i++){
-        for(int j=1;(i+j*j) <=n;j++){
-            dp[i+j*j] = Math.min(dp[i+j*j],dp[i]+1);
+        int[] dp = new int[n+1];
+        Arrays.fill(dp,Integer.MAX_VALUE);
+        dp[0] = 0;
+        for(int i=0;i<=n;i++){
+            for(int j=1;(i+j*j) <=n;j++){
+                dp[i+j*j] = Math.min(dp[i+j*j],dp[i]+1);
+            }
         }
+        return dp[n];
     }
-    return dp[n];
-}
-```
-```
-public int numSquares(int n) {
-    int[] dp = new int[n + 1];
-    Arrays.fill(dp, Integer.MAX_VALUE);
-    dp[0] = 0;
-    for(int i = 1; i <= n; ++i) {
-        int min = Integer.MAX_VALUE;
-        int j = 1;
-        while(i - j*j >= 0) {
-            min = Math.min(min, dp[i - j*j] + 1);
-            ++j;
-        }
-        dp[i] = min;
-    }		
-return dp[n];
 }
 ```
 ```java
-public int numSquares(int n) {
-    List<Integer> squareList = generateSquareList(n);
-    int[] dp = new int[n + 1];
-    for (int i = 1; i <= n; i++) {
-        int min = Integer.MAX_VALUE;
-        for (int square : squareList) {
-            if (square > i) {
-                break;
+class numSquares{
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for(int i = 1; i <= n; ++i) {
+            int min = Integer.MAX_VALUE;
+            int j = 1;
+            while(i - j*j >= 0) {
+                min = Math.min(min, dp[i - j*j] + 1);
+                ++j;
             }
-            min = Math.min(min, dp[i - square] + 1);
-        }
-        dp[i] = min;
+            dp[i] = min;
+        }		
+        return dp[n];
     }
-    return dp[n];
+}
+```
+```java
+class numSquares{
+    public int numSquares(int n) {
+        List<Integer> squareList = generateSquareList(n);
+        int[] dp = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            int min = Integer.MAX_VALUE;
+            for (int square : squareList) {
+                if (square > i) {
+                    break;
+                }
+                min = Math.min(min, dp[i - square] + 1);
+            }
+            dp[i] = min;
+        }
+        return dp[n];
+    }
+    private List<Integer> generateSquareList(int n) {
+        List<Integer> squareList = new ArrayList<>();
+        int diff = 3;
+        int square = 1;
+        while (square <= n) {
+            squareList.add(square);
+            square += diff;
+            diff += 2;
+        }
+        return squareList;
+    }
 }
 
-private List<Integer> generateSquareList(int n) {
-    List<Integer> squareList = new ArrayList<>();
-    int diff = 3;
-    int square = 1;
-    while (square <= n) {
-        squareList.add(square);
-        square += diff;
-        diff += 2;
-    }
-    return squareList;
-}
 ```
 
 ## 分割整数构成字母字符串
@@ -502,7 +550,60 @@ private List<Integer> generateSquareList(int n) {
 [91. Decode Ways (Medium)](https://leetcode.com/problems/decode-ways/description/)
 
 题目描述：Given encoded message "12", it could be decoded as "AB" (1 2) or "L" (12).
-
+```java
+public class Solution {
+    public int numDecodings(String s) {
+        if(s == null || s.length() == 0) {
+            return 0;
+        }
+        int n = s.length();
+        int[] dp = new int[n+1];
+        dp[0] = 1;
+        dp[1] = s.charAt(0) != '0' ? 1 : 0;
+        for(int i = 2; i <= n; i++) {
+            int first = Integer.valueOf(s.substring(i-1, i));
+            int second = Integer.valueOf(s.substring(i-2, i));
+            if(first >= 1 && first <= 9) {
+               dp[i] += dp[i-1];  
+            }
+            if(second >= 10 && second <= 26) {
+                dp[i] += dp[i-2];
+            }
+        }
+        return dp[n];
+    }
+}
+```
+```java
+class Solution {
+    public int numDecodings(String s) {
+        if(s == null || s.length() == 0 || s.charAt(0) == '0') {
+                return 0;
+        }
+        int m = s.length();
+        
+        int pre1 =1;//i-1
+        int pre2 =1;//i-2
+        int count = pre1;
+        for(int i=2;i<=m;i++){
+            count =0;
+            int first = Integer.valueOf(s.substring(i-1,i));
+            int second = Integer.valueOf(s.substring(i-2,i));
+            
+            if(first >0 && first <=9){
+                count += pre1;
+            }
+            if(second >=10 && second <= 26){
+                count += pre2;
+            }
+            pre2 = pre1;
+            pre1 = count;
+        }
+        
+        return count;
+    }
+}
+```
 ```java
 public int numDecodings(String s) {
     if (s == null || s.length() == 0) {
