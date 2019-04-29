@@ -550,6 +550,7 @@ class numSquares{
 [91. Decode Ways (Medium)](https://leetcode.com/problems/decode-ways/description/)
 
 题目描述：Given encoded message "12", it could be decoded as "AB" (1 2) or "L" (12).
+O(n) time and O(n) space DP solution
 ```java
 public class Solution {
     public int numDecodings(String s) {
@@ -574,6 +575,7 @@ public class Solution {
     }
 }
 ```
+O(n) time and O(1) space DP solution
 ```java
 class Solution {
     public int numDecodings(String s) {
@@ -651,6 +653,28 @@ public int numDecodings(String s) {
 [300. Longest Increasing Subsequence (Medium)](https://leetcode.com/problems/longest-increasing-subsequence/description/)
 
 ```java
+class solution{
+    public int lengthOfLIS(int[] nums) {
+        if(nums==null || nums.length==0){
+            return 0;
+        }
+        int[] dp = new int[nums.length];
+        int max = 1;
+        for(int index=0; index<nums.length;index++){
+            dp[index]=1;
+            for(int dpIndex=0; dpIndex<index; dpIndex++){
+                if(nums[dpIndex]<nums[index]){
+                    dp[index]=Math.max(dp[index],dp[dpIndex]+1);
+                    max=Math.max(dp[index],max);
+                }
+            }
+        }
+        return max;
+    }
+}
+```
+
+```java
 public int lengthOfLIS(int[] nums) {
     int n = nums.length;
     int[] dp = new int[n];
@@ -725,6 +749,41 @@ private int binarySearch(int[] tails, int len, int key) {
         }
     }
     return l;
+}
+```
+
+```java
+class solution{
+    public static int findPositionToReplace(int[] a, int low, int high, int x) {
+        int mid;
+        while (low <= high) {
+            mid = low + (high - low) / 2;
+            if (a[mid] == x)
+                return mid;
+            else if (a[mid] > x)
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+        return low;
+    }
+    
+    public static int lengthOfLIS(int[] nums) {
+        if (nums == null | nums.length == 0)
+            return 0;
+        int n = nums.length, len = 0;
+        int[] increasingSequence = new int[n];
+        increasingSequence[len++] = nums[0];
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > increasingSequence[len - 1])
+                increasingSequence[len++] = nums[i];
+            else {
+                int position = findPositionToReplace(increasingSequence, 0, len - 1, nums[i]);
+                increasingSequence[position] = nums[i];
+            }
+        }
+        return len;
+    }
 }
 ```
 
