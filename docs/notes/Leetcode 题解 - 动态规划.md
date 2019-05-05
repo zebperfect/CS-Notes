@@ -751,7 +751,7 @@ private int binarySearch(int[] tails, int len, int key) {
     return l;
 }
 ```
-
+(这个比较好理解！)
 ```java
 class solution{
     public static int findPositionToReplace(int[] a, int low, int high, int x) {
@@ -798,7 +798,53 @@ Explanation: The longest chain is [1,2] -> [3,4]
 ```
 
 题目描述：对于 (a, b) 和 (c, d) ，如果 b < c，则它们可以构成一条链。
-
+```java
+class Solution {
+    public int findLongestChain(int[][] pairs) {
+        
+        if(pairs == null || pairs.length == 0){
+            return 0;
+        }
+        
+        Arrays.sort(pairs,(a,b)-> (a[0] - b[0]));
+        int m = pairs.length;
+        int[] dp = new int[m];
+        Arrays.fill(dp,1);
+        int max = 1;
+        for(int i =1;i<m;i++){
+            for(int j=0;j<i;j++){
+                if(pairs[j][1] < pairs[i][0]){
+                    dp[i] = Math.max(dp[i],dp[j]+1);
+                    max = Math.max(max,dp[i]);
+                }
+            }
+        }
+        
+        return max;
+    }
+}
+```
+```java
+class Solution {
+    public int findLongestChain(int[][] pairs) {
+        
+        if(pairs == null || pairs.length == 0){
+            return 0;
+        }
+        Arrays.sort(pairs,(a,b)->(a[1]-b[1]));
+        int m = pairs.length;
+        int count = 1;
+        int max = pairs[0][1];
+        for(int i=1;i<m;i++){
+            if(max < pairs[i][0]){
+                max = pairs[i][1];
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
 ```java
 public int findLongestChain(int[][] pairs) {
     if (pairs == null || pairs.length == 0) {
@@ -837,6 +883,53 @@ Output: 2
 ```
 
 要求：使用 O(N) 时间复杂度求解。
+up[]记录上摆次数，down[]记录下摆次数
+Time complexity : O(n^2),Space complexity : O(n)
+```java
+public class Solution {
+    public int wiggleMaxLength(int[] nums) {
+        if (nums.length < 2)
+            return nums.length;
+        int[] up = new int[nums.length];
+        int[] down = new int[nums.length];
+        for (int i = 1; i < nums.length; i++) {
+            for(int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    up[i] = Math.max(up[i],down[j] + 1);
+                } else if (nums[i] < nums[j]) {
+                    down[i] = Math.max(down[i],up[j] + 1);
+                }
+            }
+        }
+        return 1 + Math.max(down[nums.length - 1], up[nums.length - 1]);
+    }
+}
+```
+Time complexity : O(n),Space complexity : O(n)
+```java
+public class Solution {
+    public int wiggleMaxLength(int[] nums) {
+        if (nums.length < 2)
+            return nums.length;
+        int[] up = new int[nums.length];
+        int[] down = new int[nums.length];
+        up[0] = down[0] = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] > nums[i - 1]) {
+                up[i] = down[i - 1] + 1;
+                down[i] = down[i - 1];
+            } else if (nums[i] < nums[i - 1]) {
+                down[i] = up[i - 1] + 1;
+                up[i] = up[i - 1];
+            } else {
+                down[i] = down[i - 1];
+                up[i] = up[i - 1];
+            }
+        }
+        return Math.max(down[nums.length - 1], up[nums.length - 1]);
+    }
+}
+```
 
 ```java
 public int wiggleMaxLength(int[] nums) {
@@ -854,6 +947,34 @@ public int wiggleMaxLength(int[] nums) {
     return Math.max(up, down);
 }
 ```
+
+```java
+class Solution {
+    public int wiggleMaxLength(int[] nums) {
+        
+        if(nums ==null || nums.length == 0){
+            return 0;
+        }
+        int n = nums.length;
+        Boolean flag = null;
+        int count = n;
+        for(int i=0;i< n-1;i++){
+            int temp = nums[i+1] - nums[i];
+            if(temp ==0){
+                count--;
+            }else if(flag == null){
+                flag = temp > 0;
+            }else if((flag && temp > 0) || (!flag && temp <0)){
+                count --;
+            }else{
+                flag=!flag;
+            }
+        }
+        return count;
+    }
+}
+```
+
 
 # 最长公共子序列
 
