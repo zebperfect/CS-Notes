@@ -1286,6 +1286,30 @@ public int coinChange(int[] coins, int amount) {
 }
 ```
 
+```java
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        
+        if(amount == 0 || coins == null || coins.length == 0){
+            return 0;
+        }
+        int max = amount +1;
+        int[] dp = new int[amount+1];
+        
+        Arrays.fill(dp,max);
+        dp[0] = 0;
+        for(int i=1;i<= amount;i++){
+            for(int j=0;j < coins.length;j++){
+                if(coins[j] <= i){
+                    dp[i] = Math.min(dp[i],dp[i-coins[j]]+1);
+                }
+            }
+        }
+        return dp[amount] >amount ?-1:dp[amount];
+    }
+}
+```
+
 ## 找零钱的硬币数组合
 
 [518\. Coin Change 2 (Medium)](https://leetcode.com/problems/coin-change-2/description/)
@@ -1572,6 +1596,15 @@ exection -> execution (insert 'u')
 ```
 
 题目描述：修改一个字符串成为另一个字符串，使得修改次数最少。一次修改操作包括：插入一个字符、删除一个字符、替换一个字符。
+
+we use a array dist to save the minimum distance of substring of word1 and word2, i.e., dist[i][j] denotes the minimum distance of word1.substring(0, i) and word2.substring(0, j).
+Apparently, dist[0][j] = j and dist[i][0] = i.
+When we calculate dist[i][j], we first compare word1[i] and word2[j], if word1[i] equals word2[j], then dist[i][j] equals dist[i - 1][j - 1]. If word1[i] != word2[j], then we have three operations:
+
+replace word1[i] with word2[j] (dist[i - 1][j - 1] + 1)
+delete word1[i] (dist[i - 1][j] + 1)
+delete word2[j] (dist[i][j - 1] + 1)
+Note that insert and delete are symmetric operations, so we choice 2 is equal to insert character to word2 and choice 3 is equal to insert character to word1.
 
 ```java
 public int minDistance(String word1, String word2) {
